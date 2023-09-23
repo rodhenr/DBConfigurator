@@ -2,8 +2,30 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Database Configurador</h1>
+<div class="selection-container">
+    <div class="package-selection">
+        <MudSelect T="string" Label="Package" Required="true">
+            @foreach (var packages in _tablePackages)
+            {
+                <MudSelectItem Value="@packages"/>
+            }
+        </MudSelect>
+    </div>
+    <div class="table-selection">
+        <MudSelect T="string" Label="Table" Required="true">
+            @foreach (var table in _tableNames)
+            {
+                <MudSelectItem Value="@table"/>
+            }
+        </MudSelect>
+    </div>
+</div>
+<div class="table-data-container">
+    <TableData/>
+</div>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
+@code {
+    private readonly List<string> _tablePackages = new() { "Package1", "Package2", "Package3", "Package4" };
+    private readonly List<string> _tableNames = new() { "table1", "table2", "table3" };
+}
