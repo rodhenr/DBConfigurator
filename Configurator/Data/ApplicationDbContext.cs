@@ -9,8 +9,8 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Package>? Packages { get; set; }
-    public DbSet<PackageGroup>? PackageGroups { get; set; }
+    public DbSet<Package> Packages { get; set; }
+    public DbSet<PackageGroup> PackageGroups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

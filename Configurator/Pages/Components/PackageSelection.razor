@@ -1,0 +1,44 @@
+﻿@using Configurator.Data.Models
+@inject Interfaces.IPackagesService PackageService
+
+<div class="selection-container">
+    <div class="package-selection">
+        <InputSelect @bind-Value="SelectedGroupId" @bind-Value:after="OnPackageGroupValueChanged">
+            @foreach (var package in _packageGroups)
+            {
+                <option Value="@package.Id">@package.PackageGroupName</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="table-selection">
+        <InputSelect @bind-Value="SelectedTableName" @bind-Value:after="OnPackageValueChanged">
+            @foreach (var package in _packages)
+            {
+                <option Value="@package.TableName">@package.TableName</option>
+            }
+        </InputSelect>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<PackageGroup> _packageGroups = new List<PackageGroup>();
+    private IEnumerable<Package> _packages = new List<Package>();
+    private int SelectedGroupId { get; set; }
+    private string? SelectedTableName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _packageGroups = await PackageService.GetPackageGroupsAsync();
+        SelectedGroupId = _packageGroups.First().Id;
+    }
+
+    private async Task OnPackageGroupValueChanged()
+    {
+        _packages = await PackageService.GetPackagesAsync(SelectedGroupId);
+    }
+
+    private async Task OnPackageValueChanged()
+    {
+    }
+
+}

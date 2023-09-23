@@ -1,22 +1,24 @@
-﻿<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
-    <HeaderContent>
-        <MudTh>Nr</MudTh>
-        <MudTh>Sign</MudTh>
-        <MudTh>Name</MudTh>
-        <MudTh>Position</MudTh>
-        <MudTh>Molar mass</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">a</MudTd>
-        <MudTd DataLabel="Sign">b</MudTd>
-        <MudTd DataLabel="Name">c</MudTd>
-        <MudTd DataLabel="Position" HideSmall="_hidePosition">d</MudTd>
-        <MudTd DataLabel="Molar mass">e</MudTd>
-    </RowTemplate>
-</MudTable>
-
-<MudSwitch @bind-Checked="_hidePosition">Hide <b>position</b> when Breakpoint=Xs</MudSwitch>
-<MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
+﻿<div class="table-data-container">
+    @* <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info"> *@
+    @*     <HeaderContent> *@
+    @*         <MudTh>Nr</MudTh> *@
+    @*         <MudTh>Sign</MudTh> *@
+    @*         <MudTh>Name</MudTh> *@
+    @*         <MudTh>Position</MudTh> *@
+    @*         <MudTh>Molar mass</MudTh> *@
+    @*     </HeaderContent> *@
+    @*     <RowTemplate> *@
+    @*         <MudTd DataLabel="Nr">a</MudTd> *@
+    @*         <MudTd DataLabel="Sign">b</MudTd> *@
+    @*         <MudTd DataLabel="Name">c</MudTd> *@
+    @*         <MudTd DataLabel="Position" HideSmall="_hidePosition">d</MudTd> *@
+    @*         <MudTd DataLabel="Molar mass">e</MudTd> *@
+    @*     </RowTemplate> *@
+    @* </MudTable> *@
+    @* *@
+    @* <MudSwitch @bind-Checked="_hidePosition">Hide <b>position</b> when Breakpoint=Xs</MudSwitch> *@
+    @* <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch> *@
+</div>
 
 @code {
     private bool _hidePosition;
