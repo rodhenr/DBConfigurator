@@ -17,9 +17,9 @@ namespace Configurator.Data.Migrations
                 columns: new[] { "PackageGroupId", "TableName", "Id" },
                 values: new object[,]
                 {
-                    { 3, "TRAD_Aluno", 1 },
-                    { 3, "TRAD_Escola", 2 },
-                    { 3, "TRAD_Professor", 3 }
+                    { 3, "TRAD_Account", 1 },
+                    { 3, "TRAD_Company", 2 },
+                    { 3, "TRAD_Employee", 3 }
                 });
         }
 
@@ -29,17 +29,17 @@ namespace Configurator.Data.Migrations
             migrationBuilder.DeleteData(
                 table: "Packages",
                 keyColumns: new[] { "PackageGroupId", "TableName" },
-                keyValues: new object[] { 3, "TRAD_Aluno" });
+                keyValues: new object[] { 3, "TRAD_Account" });
 
             migrationBuilder.DeleteData(
                 table: "Packages",
                 keyColumns: new[] { "PackageGroupId", "TableName" },
-                keyValues: new object[] { 3, "TRAD_Escola" });
+                keyValues: new object[] { 3, "TRAD_Company" });
 
             migrationBuilder.DeleteData(
                 table: "Packages",
                 keyColumns: new[] { "PackageGroupId", "TableName" },
-                keyValues: new object[] { 3, "TRAD_Professor" });
+                keyValues: new object[] { 3, "TRAD_Employee" });
         }
     }
 }

@@ -4,6 +4,7 @@
 <div class="selection-container">
     <div class="package-selection">
         <InputSelect @bind-Value="SelectedGroupId" @bind-Value:after="OnPackageGroupValueChanged">
+            <option value="0"></option>
             @foreach (var package in _packageGroups)
             {
                 <option Value="@package.Id">@package.PackageGroupName</option>
@@ -39,7 +40,6 @@
     protected override async Task OnInitializedAsync()
     {
         _packageGroups = await PackageService.GetPackageGroupsAsync();
-        SelectedGroupId = _packageGroups.First().Id;
     }
 
     private async Task OnPackageGroupValueChanged()
