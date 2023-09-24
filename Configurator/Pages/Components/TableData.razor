@@ -1,4 +1,6 @@
-﻿<div class="table-data-container">
+﻿@inject NavigationManager NavigationManager
+
+<div class="table-data-container">
 
     @if (SelectedTableName == "0")
     {
@@ -7,7 +9,7 @@
     else
     {
         <h2>@SelectedTableName</h2>
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" OnClick="@(() => OnInsert(SelectedTableName))"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" OnClick="NavigateToInsertPage"/>
         <MudSimpleTable FixedHeader="true" Dense="true" Hover="true" Bordered="true" Style="overflow-x: auto;">
             <thead>
             <tr>
@@ -54,10 +56,6 @@
     [Parameter]
     public EventCallback<string> SelectedTableNameChanged { get; set; }
 
-    private async Task OnInsert(string tableName)
-    {
-    }
-
     private async Task OnRemove(Dictionary<string, string> e)
     {
     }
@@ -66,4 +64,8 @@
     {
     }
 
+    private void NavigateToInsertPage()
+    {
+        NavigationManager.NavigateTo($"/add?tableName={SelectedTableName}");
+    }
 }

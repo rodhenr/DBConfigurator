@@ -29,3 +29,23 @@ select {
 .special-table-column {
     width: 50px;
 }
+
+.insert-container {
+    background-color: #d5d5d5;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    width: 600px;
+}
+
+.insert-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.insert-item {
+    display: flex;
+}

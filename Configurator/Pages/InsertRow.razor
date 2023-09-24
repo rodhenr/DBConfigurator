@@ -1,0 +1,58 @@
+﻿@using Configurator.Interfaces
+@using Configurator.Data.Models
+@inject ITableService TableService
+@inject NavigationManager NavigationManager
+
+@page "/add"
+
+<div class="insert-container">
+    <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" OnClick="NavigateToIndexPage"/>
+    <h3>Add a new register - @tableName</h3>
+    <div class="insert-main">
+        @foreach (var column in columns)
+        {
+            if (column.ColumnName == "Id")
+            {
+                <MudTextField @bind-Value="inputValues[column.ColumnName]" Label="@column.ColumnName" Variant="Variant.Filled" Margin="Margin.Dense" Disabled="true" />
+            }
+            else
+            {
+                <MudTextField @bind-Value="inputValues[column.ColumnName]" Label="@column.ColumnName" Variant="Variant.Filled" Margin="Margin.Dense" />
+            }
+        }
+    </div>
+    <MudIconButton Icon="@Icons.Material.Filled.AddCircle" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" OnClick="InsertIntoDatabase"/>
+</div>
+
+@code {
+    private List<ColumnInformation> columns = new();
+    private Dictionary<string, string> inputValues = new();
+    private string? tableName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        tableName = queryParams["tableName"];
+
+        if (tableName is null) throw new Exception("Error");
+
+        var columnsData = await TableService.GetTableInformationSchema(tableName);
+        columns.AddRange(columnsData);
+        foreach (var column in columnsData)
+        {
+            inputValues.Add(column.ColumnName, "");
+        }
+    }
+
+    private void NavigateToIndexPage()
+    {
+        NavigationManager.NavigateTo($"/");
+    }
+
+    private async Task InsertIntoDatabase()
+    {
+        await TableService.InsertIntoDatabaseAsync(inputValues, tableName);
+        NavigateToIndexPage();
+    }
+}
