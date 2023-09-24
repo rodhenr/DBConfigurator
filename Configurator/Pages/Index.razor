@@ -1,27 +1,30 @@
 ﻿@using Configurator.Interfaces
-@inject ITableService tableService
+@inject ITableService TableService
 
 @page "/"
 
 <PageTitle>Index</PageTitle>
 
-<PackageSelection HandleClick="@GetTableData"/>
-<TableData TableHeaders="_tableHeaders" TableDataValues="_tableData"/>
+<PackageSelection @bind-SelectedTableName="_selectedTableName" GetTableData="@GetTableData"/>
+<TableData @bind-SelectedTableName="_selectedTableName" TableHeaders="_tableHeaders" TableDataValues="_tableData"/>
 
 @code {
     private List<string> _tableHeaders = new();
-    private Dictionary<int, List<string>> _tableData = new();
+    private List<Dictionary<string, string>> _tableData = new();
+    private string _selectedTableName = "0";
 
-    private async Task GetTableData()
+    private async Task GetTableData(string tableName)
     {
         _tableHeaders.Clear();
         _tableData.Clear();
-        
-        var result = await tableService.GetTableColumns("PackageGroups");
+
+        var result = await TableService.GetTableColumns(tableName);
         _tableHeaders.AddRange(result.ToList());
 
-        var resultData = await tableService.GetTableData("PackageGroups", result);
+        var resultData = await TableService.GetTableData(tableName, result.ToList());
         _tableData = resultData;
+        
+        var test = await TableService.GetPrimaryKeyColumns(tableName);
     }
 
 }

@@ -3,39 +3,44 @@
 
 <div class="selection-container">
     <div class="package-selection">
-        <InputSelect @bind-Value="SelectedGroupId" @bind-Value:after="OnPackageGroupValueChanged">
-            <option value="0"></option>
-            @foreach (var package in _packageGroups)
-            {
-                <option Value="@package.Id">@package.PackageGroupName</option>
-            }
-        </InputSelect>
+        <label>
+            Group:
+            <InputSelect @bind-Value="SelectedGroupId" @bind-Value:after="OnPackageGroupValueChanged">
+                <option value="0"></option>
+                @foreach (var package in _packageGroups)
+                {
+                    <option value="@package.Id">@package.PackageGroupName</option>
+                }
+            </InputSelect>
+        </label>
     </div>
     <div class="table-selection">
-        <InputSelect @bind-Value="SelectedTableName" @bind-Value:after="OnPackageValueChanged">
-            @foreach (var package in _packages)
-            {
-                <option Value="@package.TableName">@package.TableName</option>
-            }
-        </InputSelect>
+        <label>
+            Package:
+            <InputSelect Value="@SelectedTableName" ValueExpression="@(() => SelectedTableName)" ValueChanged="@((string e) => OnPackageValueChanged(e))">
+                <option value="0"></option>
+                @foreach (var package in _packages)
+                {
+                    <option value="@package.TableName">@package.TableName</option>
+                }
+            </InputSelect>
+        </label>
     </div>
-
-    <button @onclick="InvokeHandleClick">click</button>
 </div>
 
 @code {
     private IEnumerable<PackageGroup> _packageGroups = new List<PackageGroup>();
     private IEnumerable<Package> _packages = new List<Package>();
     private int SelectedGroupId { get; set; }
-    private string? SelectedTableName { get; set; }
 
     [Parameter]
-    public EventCallback HandleClick { get; set; }
+    public string? SelectedTableName { get; set; }
 
-    private async Task InvokeHandleClick()
-    {
-        await HandleClick.InvokeAsync();
-    }
+    [Parameter]
+    public EventCallback<string> GetTableData { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SelectedTableNameChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,11 +49,15 @@
 
     private async Task OnPackageGroupValueChanged()
     {
+        await SelectedTableNameChanged.InvokeAsync("0");
         _packages = await PackageService.GetPackagesAsync(SelectedGroupId);
     }
 
-    private async Task OnPackageValueChanged()
+    private async Task OnPackageValueChanged(string packageName)
     {
+        await SelectedTableNameChanged.InvokeAsync(packageName);
+        if (packageName != "0") await GetTableData.InvokeAsync(packageName);
+        StateHasChanged();
     }
 
 }

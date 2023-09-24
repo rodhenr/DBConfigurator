@@ -3,5 +3,6 @@
 public interface ITableService
 {
     Task<IEnumerable<string>> GetTableColumns(string tableName);
-    Task<Dictionary<int, List<string>>> GetTableData(string tableName, IEnumerable<string> columns);
+    Task<List<Dictionary<string, string>>> GetTableData(string tableName, List<string> columns);
+    Task<string> GetPrimaryKeyColumns(string tableName);
 }

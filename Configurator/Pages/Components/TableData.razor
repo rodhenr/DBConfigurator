@@ -1,17 +1,17 @@
 ﻿<div class="table-data-container">
 
-    @if (TableHeaders.Count == 0)
+    @if (SelectedTableName == "0")
     {
         <p>Nothing to show</p>
     }
     else
     {
-        <h2>TABLE NAME</h2>
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium"/>
+        <h2>@SelectedTableName</h2>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" OnClick="@(() => OnInsert(SelectedTableName))"/>
         <MudSimpleTable FixedHeader="true" Dense="true" Hover="true" Bordered="true" Style="overflow-x: auto;">
             <thead>
             <tr>
-                @foreach (var name in TableHeaders)
+                @foreach (var name in TableHeaders!)
                 {
                     <td>@name</td>
                 }
@@ -20,15 +20,19 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var row in TableDataValues)
+            @foreach (var row in TableDataValues!)
             {
                 <tr>
-                    @foreach (var item in row.Value)
+                    @foreach (var item in row)
                     {
-                        <td>@item</td>
+                        <td>@item.Value</td>
                     }
-                    <td class="special-table-column"><MudIconButton Icon="@Icons.Material.Filled.ModeEdit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"/></td>
-                    <td class="special-table-column"><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"/></td>
+                    <td class="special-table-column">
+                        <MudIconButton Icon="@Icons.Material.Filled.ModeEdit" Variant="@Variant.Filled" Color="@Color.Primary" Size="@Size.Small" OnClick="@(() => OnEdit(row))"/>
+                    </td>
+                    <td class="special-table-column">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="@Variant.Filled" Color="@Color.Primary" Size="@Size.Small" OnClick="@(() => OnRemove(row))"/>
+                    </td>
                 </tr>
             }
             </tbody>
@@ -37,14 +41,29 @@
 </div>
 
 @code {
-    private bool _hidePosition;
-    private bool _loading;
 
     [Parameter]
-    public List<string> TableHeaders { get; set; }
+    public string? SelectedTableName { get; set; }
 
     [Parameter]
-    public Dictionary<int, List<string>>? TableDataValues { get; set; }
+    public List<string>? TableHeaders { get; set; }
+
+    [Parameter]
+    public List<Dictionary<string, string>>? TableDataValues { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SelectedTableNameChanged { get; set; }
+
+    private async Task OnInsert(string tableName)
+    {
+    }
+
+    private async Task OnRemove(Dictionary<string, string> e)
+    {
+    }
+
+    private async Task OnEdit(Dictionary<string, string> e)
+    {
+    }
 
 }
-

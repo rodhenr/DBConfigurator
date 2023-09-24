@@ -8,6 +8,10 @@
     width: 350px;
 }
 
+label {
+    width: 100%;
+}
+
 select {
     height: 30px;
     width: 100%;

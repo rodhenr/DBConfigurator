@@ -20,9 +20,9 @@ public class TableService : ITableService
             .ToListAsync();
     }
 
-    public async Task<Dictionary<int, List<string>>> GetTableData(string tableName, IEnumerable<string> columns)
+    public async Task<List<Dictionary<string, string>>> GetTableData(string tableName, List<string> columns)
     {
-        var data = new Dictionary<int, List<string>>();
+        var dataList = new List<Dictionary<string, string>>();
         var connString = _context.Database.GetConnectionString();
 
         await using var connection = new SqlConnection(connString);
@@ -31,20 +31,33 @@ public class TableService : ITableService
         var command = new SqlCommand($"SELECT * FROM {tableName}", connection);
         await using var reader = await command.ExecuteReaderAsync();
 
-        var rowCount = 1;
         while (await reader.ReadAsync())
         {
-            var list = new List<string?>();
-
-            foreach (var column in columns)
-            {
-                list.Add(reader[column].ToString());
-            }
-
-            data.Add(rowCount, list);
-            rowCount++;
+            var columnValues = columns.ToDictionary(column => column, column => reader[column].ToString() ?? "");
+            dataList.Add(columnValues);
         }
 
-        return data;
+        return dataList;
+    }
+
+    public async Task<string> GetPrimaryKeyColumns(string tableName)
+    {
+        var connString = _context.Database.GetConnectionString();
+
+        await using var connection = new SqlConnection(connString);
+        await connection.OpenAsync();
+
+        const string query = """
+                             SELECT STRING_AGG(COLUMN_NAME, ', ') AS PrimaryKeyColumns
+                             FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                             WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + CONSTRAINT_NAME), 'IsPrimaryKey') = 1
+                             AND TABLE_NAME = 'Packages';
+                             """;
+
+        var command = new SqlCommand(query, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        await reader.ReadAsync();
+        return reader.GetString(0);
     }
 }
