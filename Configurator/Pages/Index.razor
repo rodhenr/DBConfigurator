@@ -5,10 +5,8 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Database Configurador</h1>
-<PackageSelection/>
+<PackageSelection HandleClick="@GetTableData"/>
 <TableData TableHeaders="_tableHeaders" TableDataValues="_tableData"/>
-<button @onclick="GetTableData">click</button>
 
 @code {
     private List<string> _tableHeaders = new();
@@ -17,6 +15,8 @@
     private async Task GetTableData()
     {
         _tableHeaders.Clear();
+        _tableData.Clear();
+        
         var result = await tableService.GetTableColumns("PackageGroups");
         _tableHeaders.AddRange(result.ToList());
 

@@ -1,8 +1,27 @@
 ﻿.selection-container {
+    background-color: #1e3f87;
+    color: #FFF;
     display: flex;
+    flex-direction: column;
     gap: 1rem;
+    padding: 2rem 1rem;
+    width: 350px;
 }
 
 select {
-    min-width: 200px;
+    height: 30px;
+    width: 100%;
+}
+
+.table-data-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1rem;
+    width: 100%;
+}
+
+.special-table-column {
+    width: 50px;
 }

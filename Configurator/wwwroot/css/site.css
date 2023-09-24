@@ -1,8 +1,9 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
+html, body {  
     box-sizing: border-box;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
+    height: 100%;
     margin: 0;
     padding: 0;
 }
@@ -30,7 +31,8 @@ a, .btn-link {
 }
 
 .content {
-    padding-top: 1.1rem;
+    display: flex;
+    height: 100%;
 }
 
 .valid.modified:not([type=checkbox]) {

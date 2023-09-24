@@ -18,6 +18,8 @@
             }
         </InputSelect>
     </div>
+
+    <button @onclick="InvokeHandleClick">click</button>
 </div>
 
 @code {
@@ -25,6 +27,14 @@
     private IEnumerable<Package> _packages = new List<Package>();
     private int SelectedGroupId { get; set; }
     private string? SelectedTableName { get; set; }
+
+    [Parameter]
+    public EventCallback HandleClick { get; set; }
+
+    private async Task InvokeHandleClick()
+    {
+        await HandleClick.InvokeAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {

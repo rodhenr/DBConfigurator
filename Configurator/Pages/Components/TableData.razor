@@ -1,13 +1,22 @@
 ﻿<div class="table-data-container">
-    @if (TableHeaders != null)
+
+    @if (TableHeaders.Count == 0)
     {
-        <MudSimpleTable>
+        <p>Nothing to show</p>
+    }
+    else
+    {
+        <h2>TABLE NAME</h2>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium"/>
+        <MudSimpleTable FixedHeader="true" Dense="true" Hover="true" Bordered="true" Style="overflow-x: auto;">
             <thead>
             <tr>
                 @foreach (var name in TableHeaders)
                 {
-                    <MudTh>@name</MudTh>
+                    <td>@name</td>
                 }
+                <td>Edit</td>
+                <td>Remove</td>
             </tr>
             </thead>
             <tbody>
@@ -18,6 +27,8 @@
                     {
                         <td>@item</td>
                     }
+                    <td class="special-table-column"><MudIconButton Icon="@Icons.Material.Filled.ModeEdit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"/></td>
+                    <td class="special-table-column"><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"/></td>
                 </tr>
             }
             </tbody>
@@ -30,9 +41,10 @@
     private bool _loading;
 
     [Parameter]
-    public List<string>? TableHeaders { get; set; }
+    public List<string> TableHeaders { get; set; }
 
     [Parameter]
-    public Dictionary<int, List<string>> TableDataValues { get; set; }
+    public Dictionary<int, List<string>>? TableDataValues { get; set; }
 
 }
+
