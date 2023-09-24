@@ -1,10 +1,27 @@
-﻿@page "/"
+﻿@using Configurator.Interfaces
+@inject ITableService tableService
+
+@page "/"
 
 <PageTitle>Index</PageTitle>
 
 <h1>Database Configurador</h1>
 <PackageSelection/>
-<TableData/>
+<TableData TableHeaders="_tableHeaders" TableDataValues="_tableData"/>
+<button @onclick="GetTableData">click</button>
 
 @code {
+    private List<string> _tableHeaders = new();
+    private Dictionary<int, List<string>> _tableData = new();
+
+    private async Task GetTableData()
+    {
+        _tableHeaders.Clear();
+        var result = await tableService.GetTableColumns("PackageGroups");
+        _tableHeaders.AddRange(result.ToList());
+
+        var resultData = await tableService.GetTableData("PackageGroups", result);
+        _tableData = resultData;
+    }
+
 }

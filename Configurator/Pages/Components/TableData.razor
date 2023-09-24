@@ -1,28 +1,38 @@
 ﻿<div class="table-data-container">
-    @* <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info"> *@
-    @*     <HeaderContent> *@
-    @*         <MudTh>Nr</MudTh> *@
-    @*         <MudTh>Sign</MudTh> *@
-    @*         <MudTh>Name</MudTh> *@
-    @*         <MudTh>Position</MudTh> *@
-    @*         <MudTh>Molar mass</MudTh> *@
-    @*     </HeaderContent> *@
-    @*     <RowTemplate> *@
-    @*         <MudTd DataLabel="Nr">a</MudTd> *@
-    @*         <MudTd DataLabel="Sign">b</MudTd> *@
-    @*         <MudTd DataLabel="Name">c</MudTd> *@
-    @*         <MudTd DataLabel="Position" HideSmall="_hidePosition">d</MudTd> *@
-    @*         <MudTd DataLabel="Molar mass">e</MudTd> *@
-    @*     </RowTemplate> *@
-    @* </MudTable> *@
-    @* *@
-    @* <MudSwitch @bind-Checked="_hidePosition">Hide <b>position</b> when Breakpoint=Xs</MudSwitch> *@
-    @* <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch> *@
+    @if (TableHeaders != null)
+    {
+        <MudSimpleTable>
+            <thead>
+            <tr>
+                @foreach (var name in TableHeaders)
+                {
+                    <MudTh>@name</MudTh>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var row in TableDataValues)
+            {
+                <tr>
+                    @foreach (var item in row.Value)
+                    {
+                        <td>@item</td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </MudSimpleTable>
+    }
 </div>
 
 @code {
     private bool _hidePosition;
     private bool _loading;
-    private List<string> Elements = new() { "one", "two", "three" };
+
+    [Parameter]
+    public List<string>? TableHeaders { get; set; }
+
+    [Parameter]
+    public Dictionary<int, List<string>> TableDataValues { get; set; }
 
 }

@@ -12,7 +12,8 @@ public static class ServiceInjection
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IPackagesService, PackagesService>();
-
+        services.AddScoped<ITableService, TableService>();
+        
         using var scope = services.BuildServiceProvider().CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
