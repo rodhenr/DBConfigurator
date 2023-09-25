@@ -30,6 +30,7 @@ public class TableService : ITableService
         await connection.OpenAsync();
 
         var command = new SqlCommand($"SELECT * FROM {tableName}", connection);
+        //Create inner join here
         await using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
@@ -99,6 +100,28 @@ public class TableService : ITableService
         }
 
         return result;
+    }
+
+    public async Task<Dictionary<string, string>> GetForeignTableData(string tableName)
+    {
+        var columns = new Dictionary<string, string>();
+
+        var connString = _context.Database.GetConnectionString();
+
+        await using var connection = new SqlConnection(connString);
+        await connection.OpenAsync();
+
+        var query = $"SELECT Id, {tableName} FROM {tableName}_c";
+
+        var command = new SqlCommand(query, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            columns.Add(reader.GetInt32(0).ToString(), reader.GetString(1));
+        }
+
+        return columns;
     }
 
     public async Task InsertIntoDatabaseAsync(Dictionary<string, string> data, string tableName)

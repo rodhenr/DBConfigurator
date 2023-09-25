@@ -12,6 +12,7 @@ public class ColumnInformation
         MaximumLength = maximumLength;
         NumericPrecision = numericPrecision;
         NumericScale = numericScale;
+        Data = new Dictionary<string, string>();
     }
 
     public string ColumnName { get; set; }
@@ -21,4 +22,5 @@ public class ColumnInformation
     public int? MaximumLength { get; set; }
     public int? NumericPrecision { get; set; }
     public int? NumericScale { get; set; }
+    public Dictionary<string, string> Data { get; set; }
 }
