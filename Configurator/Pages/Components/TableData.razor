@@ -1,4 +1,7 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using Configurator.Interfaces
+@using Configurator.Data.Models
+@inject ITableService TableService
+@inject NavigationManager NavigationManager
 
 <div class="table-data-container">
 
@@ -56,16 +59,37 @@
     [Parameter]
     public EventCallback<string> SelectedTableNameChanged { get; set; }
 
+    [Parameter]
+    public EventCallback<string> GetTableData { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
     private async Task OnRemove(Dictionary<string, string> e)
     {
+        var pkColumns = await TableService.GetPrimaryKeyColumns(SelectedTableName);
+        var primaryKeyWithValues = e
+            .Where(item => pkColumns.Contains(item.Key))
+            .ToDictionary(item => item.Key, item => item.Value);
+
+        await TableService.DeleteAsync(primaryKeyWithValues, SelectedTableName);
+        await OnUpdateData();
     }
 
     private async Task OnEdit(Dictionary<string, string> e)
     {
     }
 
+    private async Task OnUpdateData()
+    {
+        await GetTableData.InvokeAsync(SelectedTableName);
+        StateHasChanged();
+    }
+
     private void NavigateToInsertPage()
     {
         NavigationManager.NavigateTo($"/add?tableName={SelectedTableName}");
     }
+
 }

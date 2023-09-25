@@ -6,7 +6,7 @@
 <PageTitle>Index</PageTitle>
 
 <PackageSelection @bind-SelectedTableName="_selectedTableName" GetTableData="@GetTableData"/>
-<TableData @bind-SelectedTableName="_selectedTableName" TableHeaders="_tableHeaders" TableDataValues="_tableData"/>
+<TableData @bind-SelectedTableName="_selectedTableName" TableHeaders="_tableHeaders" TableDataValues="_tableData" GetTableData="@GetTableData"/>
 
 @code {
     private List<string> _tableHeaders = new();
@@ -23,8 +23,5 @@
 
         var resultData = await TableService.GetTableData(tableName, result.ToList());
         _tableData = resultData;
-        
-        var test = await TableService.GetPrimaryKeyColumns(tableName);
     }
-
 }

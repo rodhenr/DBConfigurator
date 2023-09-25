@@ -41,25 +41,26 @@ public class TableService : ITableService
         return dataList;
     }
 
-    public async Task<string> GetPrimaryKeyColumns(string tableName)
+    public async Task<List<string>> GetPrimaryKeyColumns(string tableName)
     {
+        var columns = new List<string>();
         var connString = _context.Database.GetConnectionString();
 
         await using var connection = new SqlConnection(connString);
         await connection.OpenAsync();
 
-        const string query = """
-                             SELECT STRING_AGG(COLUMN_NAME, ', ') AS PrimaryKeyColumns
-                             FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-                             WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + CONSTRAINT_NAME), 'IsPrimaryKey') = 1
-                             AND TABLE_NAME = 'Packages';
-                             """;
+        var query =
+            $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + CONSTRAINT_NAME), 'IsPrimaryKey') = 1 AND TABLE_NAME = '{tableName}'";
 
         var command = new SqlCommand(query, connection);
         await using var reader = await command.ExecuteReaderAsync();
 
-        await reader.ReadAsync();
-        return reader.GetString(0);
+        while (await reader.ReadAsync())
+        {
+            columns.Add(reader.GetString(0));
+        }
+
+        return columns;
     }
 
     public async Task<List<ColumnInformation>> GetTableInformationSchema(string tableName)
@@ -117,6 +118,21 @@ public class TableService : ITableService
         {
             command.Parameters.AddWithValue($"@{item.Key}", item.Value);
         }
+
+        await command.ExecuteNonQueryAsync();
+    }
+
+    public async Task DeleteAsync(Dictionary<string, string> data, string tableName)
+    {
+        var connString = _context.Database.GetConnectionString();
+
+        await using var connection = new SqlConnection(connString);
+        await connection.OpenAsync();
+
+        var whereQuery = data.Select(d => $"{d.Key} = '{d.Value}'");
+        var query = $"DELETE FROM {tableName} WHERE {string.Join(" AND ", whereQuery)}";
+
+        var command = new SqlCommand(query, connection);
 
         await command.ExecuteNonQueryAsync();
     }
